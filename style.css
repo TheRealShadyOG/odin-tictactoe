@@ -25,17 +25,95 @@ body {
     gap: 16px;
     padding: 16px;
     border-radius: 25px;
+    position: relative;
 }
 
 .box {
     height: 100%;
     width: 100%;
     background-color: #06b6d4;
-    font-family: xo-font;
+    font-family: xo-font, sans-serif;
     font-size: 10vh;
     color: #155e75;
     border-radius: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#start {
+    position: absolute;
+    bottom: -15%;
+    height: 10%;
+    width: 25%;
+    border: 2px solid #083344;
+    border-radius: 10px;
+    background-color: #06b6d4;
+    color: #155e75;
+    font-family: xo-font, sans-serif;
+    font-size: 3vh;
+}
+
+#winner {
+    position: absolute;
+    bottom: -15%;
+    right: 0;
+    box-sizing: border-box;
+    padding: 4px;
+    height: 10%;
+    width: 70%;
+    border: 2px solid #083344;
+    border-radius: 10px;
+    background-color: #06b6d4;
+    color: #155e75;
+    font-family: xo-font, sans-serif;
+    font-size: 3vh;
+    text-align: center;
+}
+
+#name {
+    position: absolute;
+    bottom: -30%;
+    box-sizing: border-box;
+    height: 10%;
+    width: 70%;
+    border: 2px solid #083344;
+    border-radius: 10px;
+    background-color: #06b6d4;
+    color: #155e75;
+    font-family: xo-font, sans-serif;
+    font-size: 3vh;
+    text-align: center;
+}
+
+#name::placeholder {
+    color: #155e75;
+}
+
+#x, #o {
+    position: absolute;
+    bottom: -30%;
+    right: 15%;
+    height: 10%;
+    width: 10%;
+    border: 2px solid #083344;
+    border-radius: 10px;
+    background-color: #06b6d4;
+    color: #155e75;
+    font-family: xo-font, sans-serif;
+    font-size: 3vh;
+}
+
+#o {
+    right: 0;
+}
+
+#start:active {
+    background-color: #083344;
+    color: #06b6d4;
+}
+
+#selected {
+    background-color: #083344;
+    color: #06b6d4;
 }
