@@ -8,8 +8,14 @@ const gameBoard = (() => {
 
 // Store players in Objects - factory
 
-const playerFactory = (name, player) => {
-    return {name, player};
+const playerFactory = (player) => {
+    if (player === 1) {
+        marker = 'X';
+    } else if (player === 2) {
+        marker = 'O';
+    }
+
+    return {marker};
 };
 
 // Store flow of game in Object - module
@@ -22,3 +28,14 @@ const displayController = (() => {
     }
     
 })();
+
+
+// allow players to mark specific spot
+
+// tie player spot to dom
+// have eventlistener tied to gameBoard
+
+// cant click if occupied
+// if statement to do nothing if player clicks
+
+
