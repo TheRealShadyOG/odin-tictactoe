@@ -57,16 +57,13 @@ const displayController = (() => {
     let _start = document.getElementById('start');
     let _winnerDisplay = document.getElementById('winner');
     let _nameInput = document.getElementById('name');
-    let _player;
-    let _computer;
-
-    let _player1 = playerFactory('Khaza', 1);
-    let _player2 = playerFactory('bob', 2);
-    let _currentPlayer = _player1;
-    let _winner;
     let _x = document.querySelector('.x');
     let _o = document.querySelector('.o');
-
+    let _player;
+    let _computer;
+    let _currentTurn;
+    let _winner;
+    
     function updateSelected(e) {
         let _targetClass = e.target.className;
         if (_targetClass === 'x') {
@@ -89,9 +86,6 @@ const displayController = (() => {
             _o.removeEventListener('click', updateSelected);
             _nameInput.setAttribute('readonly', 'true')
         }
-
-        console.log(_player)
-        console.log(_computer)
     });
 
     function _createPlayer() {
@@ -102,15 +96,21 @@ const displayController = (() => {
         if (_x.id === 'selected') {
             _playerNum = 1;
             _computerNum = 2;
+            _currentTurn = '_player';
         } else if (_o.id === 'selected') {
             _playerNum = 2;
             _computerNum = 1;
+            _currentTurn = '_computer';
         }
 
         _player = playerFactory(_name, _playerNum);
         _computer = playerFactory('Computer', _computerNum);
 
-        
+        if (_playerNum === 1) {
+            _currentTurn = _player;
+        } else {
+            _currentTurn = _computer;
+        }
     }
 
     function _displayGrid() {
@@ -126,24 +126,25 @@ const displayController = (() => {
     function _updateGameBoard(e) {
         let _box = e.target.id
         if (gameBoard.gameBoard[_box] === '') {
-            gameBoard.gameBoard[_box] = _currentPlayer.marker;
-            _displayGrid();
-            _playerSwap();
-            _winner = gameBoard.checkWinner()
-            if (_winner !== undefined) {
-                _grid.forEach((e) => {
+            if (_currentTurn !== undefined) {
+                gameBoard.gameBoard[_box] = _currentTurn.marker;
+                _displayGrid();
+                _turnSwap();
+                _winner = gameBoard.checkWinner()
+                if (_winner !== undefined) {
+                    _grid.forEach((e) => {
                     e.removeEventListener('click', _updateGameBoard);
                 })
             }
+            }
         }
-        _createPlayer()
     }
 
-    function _playerSwap() {
-        if (_currentPlayer === _player1) {
-            _currentPlayer = _player2;
+    function _turnSwap() {
+        if (_currentTurn === _player) {
+            _currentTurn = _computer;
         } else {
-            _currentPlayer = _player1;
+            _currentTurn = _player;
         }
     }
 })();
