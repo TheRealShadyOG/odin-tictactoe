@@ -3,30 +3,30 @@
 const gameBoard = (() => {
     let gameBoard = ['', '', '', '', '', '', '', '', ''] 
 
-    function checkWinner() {
-        if ((gameBoard[0] === 'X' && gameBoard[1] === 'X' && gameBoard[2] === 'X') ||
-            (gameBoard[3] === 'X' && gameBoard[4] === 'X' && gameBoard[5] ==='X') ||
-            (gameBoard[6] === 'X' && gameBoard[7] === 'X' && gameBoard[8] ==='X') ||
-            (gameBoard[0] === 'X' && gameBoard[3] === 'X' && gameBoard[6] ==='X') ||
-            (gameBoard[1] === 'X' && gameBoard[4] === 'X' && gameBoard[7] ==='X') ||
-            (gameBoard[2] === 'X' && gameBoard[5] === 'X' && gameBoard[8] ==='X') ||
-            (gameBoard[0] === 'X' && gameBoard[4] === 'X' && gameBoard[8] ==='X') ||
-            (gameBoard[2] === 'X' && gameBoard[4] === 'X' && gameBoard[6] ==='X')) { 
+    function checkWinner(boardArray) {
+        if ((boardArray[0] === 'X' && boardArray[1] === 'X' && boardArray[2] === 'X') ||
+            (boardArray[3] === 'X' && boardArray[4] === 'X' && boardArray[5] ==='X') ||
+            (boardArray[6] === 'X' && boardArray[7] === 'X' && boardArray[8] ==='X') ||
+            (boardArray[0] === 'X' && boardArray[3] === 'X' && boardArray[6] ==='X') ||
+            (boardArray[1] === 'X' && boardArray[4] === 'X' && boardArray[7] ==='X') ||
+            (boardArray[2] === 'X' && boardArray[5] === 'X' && boardArray[8] ==='X') ||
+            (boardArray[0] === 'X' && boardArray[4] === 'X' && boardArray[8] ==='X') ||
+            (boardArray[2] === 'X' && boardArray[4] === 'X' && boardArray[6] ==='X')) { 
 
             return 'X'
-        } else if ((gameBoard[0] === 'O' && gameBoard[1] === 'O' && gameBoard[2] === 'O') ||
-            (gameBoard[3] === 'O' && gameBoard[4] === 'O' && gameBoard[5] ==='O') ||
-            (gameBoard[6] === 'O' && gameBoard[7] === 'O' && gameBoard[8] ==='O') ||
-            (gameBoard[0] === 'O' && gameBoard[3] === 'O' && gameBoard[6] ==='O') ||
-            (gameBoard[1] === 'O' && gameBoard[4] === 'O' && gameBoard[7] ==='O') ||
-            (gameBoard[2] === 'O' && gameBoard[5] === 'O' && gameBoard[8] ==='O') ||
-            (gameBoard[0] === 'O' && gameBoard[4] === 'O' && gameBoard[8] ==='O') ||
-            (gameBoard[2] === 'O' && gameBoard[4] === 'O' && gameBoard[6] ==='O')) {
+        } else if ((boardArray[0] === 'O' && boardArray[1] === 'O' && boardArray[2] === 'O') ||
+            (boardArray[3] === 'O' && boardArray[4] === 'O' && boardArray[5] ==='O') ||
+            (boardArray[6] === 'O' && boardArray[7] === 'O' && boardArray[8] ==='O') ||
+            (boardArray[0] === 'O' && boardArray[3] === 'O' && boardArray[6] ==='O') ||
+            (boardArray[1] === 'O' && boardArray[4] === 'O' && boardArray[7] ==='O') ||
+            (boardArray[2] === 'O' && boardArray[5] === 'O' && boardArray[8] ==='O') ||
+            (boardArray[0] === 'O' && boardArray[4] === 'O' && boardArray[8] ==='O') ||
+            (boardArray[2] === 'O' && boardArray[4] === 'O' && boardArray[6] ==='O')) {
 
             return 'O'
-        } else if (gameBoard[0] !== '' && gameBoard[1] !== '' && gameBoard[2] !== '' &&
-            gameBoard[3] !== '' && gameBoard[4] !== '' && gameBoard[5] !== '' &&
-            gameBoard[6] !== '' && gameBoard[7] !== '' && gameBoard[8] !== '') {
+        } else if (boardArray[0] !== '' && boardArray[1] !== '' && boardArray[2] !== '' &&
+            boardArray[3] !== '' && boardArray[4] !== '' && boardArray[5] !== '' &&
+            boardArray[6] !== '' && boardArray[7] !== '' && boardArray[8] !== '') {
 
             return 'Draw'    
         }
@@ -55,6 +55,7 @@ const playerFactory = (name, player) => {
 const displayController = (() => {
     let _grid = document.querySelectorAll('.box');
     let _start = document.getElementById('start');
+    let _restart;
     let _winnerDisplay = document.getElementById('winner');
     let _nameInput = document.getElementById('name');
     let _x = document.querySelector('.x');
@@ -63,8 +64,9 @@ const displayController = (() => {
     let _computer;
     let _currentTurn;
     let _winner;
+    let _winnerMarker
     
-    function updateSelected(e) {
+    function _updateSelected(e) {
         let _targetClass = e.target.className;
         if (_targetClass === 'x') {
             _x.setAttribute('id', 'selected');
@@ -75,18 +77,54 @@ const displayController = (() => {
         }
     }
 
-    _x.addEventListener('click', updateSelected);
-    _o.addEventListener('click', updateSelected);
+    _x.addEventListener('click', _updateSelected);
+    _o.addEventListener('click', _updateSelected);
+    _start.addEventListener('click', _enableStart);
 
-
-    _start.addEventListener('click', () => {
+    function _enableStart() {
         if (_nameInput.value !== '' && (_x.id === 'selected' || _o.id === 'selected')) {
             _createPlayer();
-            _x.removeEventListener('click', updateSelected);
-            _o.removeEventListener('click', updateSelected);
-            _nameInput.setAttribute('readonly', 'true')
+            _x.removeEventListener('click', _updateSelected);
+            _o.removeEventListener('click', _updateSelected);
+            _nameInput.setAttribute('readonly', 'true');
+            _enableRestart()
         }
-    });
+    }
+
+    function _enableRestart() {
+        _start.removeEventListener('click', _enableStart);
+        _start.textContent = 'Restart!';
+        _start.setAttribute('id', 'restart');
+        _restart = document.getElementById('restart');
+        _restart.addEventListener('click', _restartGame);
+    } 
+
+    function _restartGame() {
+        _player = undefined;
+        _computer = undefined;
+        _currentTurn = undefined;
+        _winner = undefined;
+        _winnerMarker = undefined;
+        _winnerDisplay.textContent = '';
+
+        gameBoard.gameBoard = ['', '', '', '', '', '', '', '', ''];
+        _displayGrid();
+
+        _nameInput.removeAttribute('readonly');
+        _x.addEventListener('click', _updateSelected);
+        _o.addEventListener('click', _updateSelected);
+        _restart.removeEventListener('click', _restartGame);
+
+        _start.textContent = 'Start!';
+        _start.setAttribute('id', 'start');
+        _start = document.getElementById('start');
+        _start.addEventListener('click', _enableStart);
+        
+        _grid.forEach((e) => {
+            e.addEventListener('click', _updateGameBoard);
+        });
+        
+    }
 
     function _createPlayer() {
         let _name = _nameInput.value;
@@ -141,7 +179,7 @@ const displayController = (() => {
     }
 
     function _displayWinner() {
-        let _winnerMarker = gameBoard.checkWinner()
+        _winnerMarker = gameBoard.checkWinner(gameBoard.gameBoard)
         if (_winnerMarker !== undefined) {
             if (_winnerMarker === _player.marker) {
                 _winner = _player.name;
@@ -160,15 +198,3 @@ const displayController = (() => {
         }
     }
 })();
-
-
-// Text turns into restart after pressing first time
-
-// Display winner on winnerDisplay
-// Reset on restart press
-
-
-// On restart press enable names and markers
-// _nameInput.removeAttribute('readonly')
-
-// After game is over re-enable name and markers 
