@@ -41,7 +41,7 @@ body {
     justify-content: center;
 }
 
-#start {
+#start, #restart {
     position: absolute;
     bottom: -15%;
     height: 10%;
