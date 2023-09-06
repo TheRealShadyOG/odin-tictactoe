@@ -88,6 +88,11 @@ const displayController = (() => {
             _o.removeEventListener('click', _updateSelected);
             _nameInput.setAttribute('readonly', 'true');
             _enableRestart()
+            if (_currentTurn === _computer) {
+                computerAi.computerTurn(_computer.marker);
+                _displayGrid();
+                _currentTurn = _player
+            }
         }
     }
 
@@ -167,7 +172,7 @@ const displayController = (() => {
             if (_currentTurn !== undefined) {
                 gameBoard.gameBoard[_box] = _currentTurn.marker;
                 _displayGrid();
-                _turnSwap();
+                _computerMove();
                 _displayWinner();
                 if (_winner !== undefined) {
                     _grid.forEach((e) => {
@@ -179,7 +184,7 @@ const displayController = (() => {
     }
 
     function _displayWinner() {
-        _winnerMarker = gameBoard.checkWinner(gameBoard.gameBoard)
+        _winnerMarker = gameBoard.checkWinner(gameBoard.gameBoard);
         if (_winnerMarker !== undefined) {
             if (_winnerMarker === _player.marker) {
                 _winner = _player.name;
@@ -193,11 +198,29 @@ const displayController = (() => {
         }
     }
 
-    function _turnSwap() {
-        if (_currentTurn === _player) {
-            _currentTurn = _computer;
-        } else {
-            _currentTurn = _player;
+    function _computerMove() {
+        if (gameBoard.checkWinner(gameBoard.gameBoard) === undefined) {
+            if (gameBoard.gameBoard.includes('')) {
+                computerAi.computerTurn(_computer.marker);
+                _displayGrid();
+            }
         }
+    }
+})();
+
+const computerAi = (() => {
+
+    function computerTurn(marker) {
+        let _randomNum = Math.floor(Math.random() * 9);
+        let _Marker = marker;
+        if (gameBoard.gameBoard[_randomNum] === '') {
+            gameBoard.gameBoard[_randomNum] = _Marker;
+        } else {
+            computerTurn(_Marker);
+        }
+    }
+
+    return {
+        computerTurn
     }
 })();
