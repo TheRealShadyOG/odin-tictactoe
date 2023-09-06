@@ -183,10 +183,13 @@ const displayController = (() => {
         if (_winnerMarker !== undefined) {
             if (_winnerMarker === _player.marker) {
                 _winner = _player.name;
+                _winnerDisplay.textContent = `${_winner} Wins!`
             } else if (_winnerMarker === _computer.marker) {
                 _winner = _computer.name;
+                _winnerDisplay.textContent = `${_winner} Wins!`
+            } else if (_winnerMarker === 'Draw') {
+                _winnerDisplay.textContent = 'Its a Draw!'
             }
-            _winnerDisplay.textContent = `${_winner} Wins`
         }
     }
 
