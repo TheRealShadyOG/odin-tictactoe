@@ -13,7 +13,7 @@ const gameBoard = (() => {
             (gameBoard[0] === 'X' && gameBoard[4] === 'X' && gameBoard[8] ==='X') ||
             (gameBoard[2] === 'X' && gameBoard[4] === 'X' && gameBoard[6] ==='X')) { 
 
-            return 'Player 1'
+            return 'X'
         } else if ((gameBoard[0] === 'O' && gameBoard[1] === 'O' && gameBoard[2] === 'O') ||
             (gameBoard[3] === 'O' && gameBoard[4] === 'O' && gameBoard[5] ==='O') ||
             (gameBoard[6] === 'O' && gameBoard[7] === 'O' && gameBoard[8] ==='O') ||
@@ -23,7 +23,7 @@ const gameBoard = (() => {
             (gameBoard[0] === 'O' && gameBoard[4] === 'O' && gameBoard[8] ==='O') ||
             (gameBoard[2] === 'O' && gameBoard[4] === 'O' && gameBoard[6] ==='O')) {
 
-            return 'Player 2'
+            return 'O'
         } else if (gameBoard[0] !== '' && gameBoard[1] !== '' && gameBoard[2] !== '' &&
             gameBoard[3] !== '' && gameBoard[4] !== '' && gameBoard[5] !== '' &&
             gameBoard[6] !== '' && gameBoard[7] !== '' && gameBoard[8] !== '') {
@@ -130,13 +130,25 @@ const displayController = (() => {
                 gameBoard.gameBoard[_box] = _currentTurn.marker;
                 _displayGrid();
                 _turnSwap();
-                _winner = gameBoard.checkWinner()
+                _displayWinner();
                 if (_winner !== undefined) {
                     _grid.forEach((e) => {
                     e.removeEventListener('click', _updateGameBoard);
                 })
             }
             }
+        }
+    }
+
+    function _displayWinner() {
+        let _winnerMarker = gameBoard.checkWinner()
+        if (_winnerMarker !== undefined) {
+            if (_winnerMarker === _player.marker) {
+                _winner = _player.name;
+            } else if (_winnerMarker === _computer.marker) {
+                _winner = _computer.name;
+            }
+            _winnerDisplay.textContent = `${_winner} Wins`
         }
     }
 
@@ -150,8 +162,6 @@ const displayController = (() => {
 })();
 
 
-// Make start button start game
-// Cant press board until start
 // Text turns into restart after pressing first time
 
 // Display winner on winnerDisplay
