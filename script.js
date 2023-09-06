@@ -32,7 +32,6 @@ const gameBoard = (() => {
         }
     }
 
-
     return {
         gameBoard: gameBoard,
         checkWinner
@@ -41,24 +40,78 @@ const gameBoard = (() => {
 
 // Store players in Objects - factory
 
-const playerFactory = (player) => {
+const playerFactory = (name, player) => {
     if (player === 1) {
         marker = 'X';
     } else if (player === 2) {
         marker = 'O';
     }
 
-    return {player, marker};
+    return {name, player, marker};
 };
 
 // Store flow of game in Object - module
 
 const displayController = (() => {
     let _grid = document.querySelectorAll('.box');
-    let _player1 = playerFactory(1);
-    let _player2 = playerFactory(2);
+    let _start = document.getElementById('start');
+    let _winnerDisplay = document.getElementById('winner');
+    let _nameInput = document.getElementById('name');
+    let _player;
+    let _computer;
+
+    let _player1 = playerFactory('Khaza', 1);
+    let _player2 = playerFactory('bob', 2);
     let _currentPlayer = _player1;
     let _winner;
+    let _x = document.querySelector('.x');
+    let _o = document.querySelector('.o');
+
+    function updateSelected(e) {
+        let _targetClass = e.target.className;
+        if (_targetClass === 'x') {
+            _x.setAttribute('id', 'selected');
+            _o.removeAttribute('id', 'selected');
+        } else if (_targetClass === 'o') {
+            _o.setAttribute('id', 'selected');
+            _x.removeAttribute('id', 'selected');
+        }
+    }
+
+    _x.addEventListener('click', updateSelected);
+    _o.addEventListener('click', updateSelected);
+
+
+    _start.addEventListener('click', () => {
+        if (_nameInput.value !== '' && (_x.id === 'selected' || _o.id === 'selected')) {
+            _createPlayer();
+            _x.removeEventListener('click', updateSelected);
+            _o.removeEventListener('click', updateSelected);
+            _nameInput.setAttribute('readonly', 'true')
+        }
+
+        console.log(_player)
+        console.log(_computer)
+    });
+
+    function _createPlayer() {
+        let _name = _nameInput.value;
+        let _playerNum;
+        let _computerNum;
+        
+        if (_x.id === 'selected') {
+            _playerNum = 1;
+            _computerNum = 2;
+        } else if (_o.id === 'selected') {
+            _playerNum = 2;
+            _computerNum = 1;
+        }
+
+        _player = playerFactory(_name, _playerNum);
+        _computer = playerFactory('Computer', _computerNum);
+
+        
+    }
 
     function _displayGrid() {
         for (let i = 0; i < _grid.length; i++) {
@@ -83,6 +136,7 @@ const displayController = (() => {
                 })
             }
         }
+        _createPlayer()
     }
 
     function _playerSwap() {
@@ -93,3 +147,17 @@ const displayController = (() => {
         }
     }
 })();
+
+
+// Make start button start game
+// Cant press board until start
+// Text turns into restart after pressing first time
+
+// Display winner on winnerDisplay
+// Reset on restart press
+
+
+// On restart press enable names and markers
+// _nameInput.removeAttribute('readonly')
+
+// After game is over re-enable name and markers 
